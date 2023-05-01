@@ -26,6 +26,32 @@ exports.signup = async (req,res,next)=>{
 
 
 // la fonction pour connecter les utilisateurs existants
-exports.login = (req,res,next)=>{
+exports.login = async (req,res,next)=>{
+   await monShemaUtilisateurImporte.findOne({email:req.body.email})
+    .then((resultatTrouve)=>{
+        if(resultatTrouve ==null)
+        {
+            res.status(401).json({message:"email/mot de pass incorrecte"});
+        }
+        else{
+            moduleBcrypt.compare(req.body.password,resultatTrouve.password)
+            .then((valide)=>{
+                if(!valide)
+                {
+                    res.status(401).json({Mesage:"email/mot de passe incorrecte"});
+                }
+                else{
+                    res.status(200).json({
+                        // information necessaire à l'authentification
+                        userID: resultatTrouve._id,
+                        token : 'Token'
+                    });
+                }
+            })
+            .catch((Error)=> res.status(500).json({Error}));
+        }
+
+    })
+    .catch((Error)=>res.status(500).json({Error}));
 
 };
