@@ -4,6 +4,7 @@ const moduleCors = require('cors'); // imortation du module cors , facilite aux 
 const monAppExpress = ModuleExpress(); // création de l'application express grace à la methode ModuleExpress()
 monAppExpress.use(moduleCors()/** la methode cors */);  // activation  de toutes les requetes cors, il permet la cmmunication  entre les requetes entrantes 
 const mongestionnaireRoute = require('./routes/gestionnaireDeRoutes'); // importation du gestionnaire de route 
+const gestonnaireRouteUtilisateur = require('./routes/gestionnaireRouteUtiisateur'); // importation  du estinnaire route utilsateur dans l'application
 
 
 /** on pouvait aussi utiliser :
@@ -24,8 +25,9 @@ pour qu'il le transmette chez le client
 Les fonctionnalités ce sont les middlewares
 wares */
 
-// l'applcation doit utiliser le gestionnaire de route 
-monAppExpress.use('/api/stuff',mongestionnaireRoute);
+
+monAppExpress.use('/api/stuff',mongestionnaireRoute); // l'applcation doit utiliser le gestionnaire de route 
+monAppExpress.use('/api/auth',gestonnaireRouteUtilisateur); // l'application express utilise la route utlisateur
 
 const moduleMongoose = require('mongoose'); //  il va permettre l'interaction avec la base de données 
 //const monRouter = require('./routes/gestionnaireDeRoutes');
