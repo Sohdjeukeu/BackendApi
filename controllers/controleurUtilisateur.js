@@ -6,6 +6,7 @@ const moduleBcrypt = require('bcrypt');
 
 
 
+
 // cette fonction permet d'enregistrer les nouveaux utilisateurs
 exports.signup = async (req,res,next)=>{
     //  va hacher le mot de pass avant de le stocker dans la base de donnée avant l'inscription 
@@ -25,24 +26,27 @@ exports.signup = async (req,res,next)=>{
 };
 
 
-// la fonction pour connecter les utilisateurs existants
+// la fonction pour connecter les utilisateurs existants verifiation de l'authentification 
 exports.login = async (req,res,next)=>{
    await monShemaUtilisateurImporte.findOne({email:req.body.email})
     .then((resultatTrouve)=>{
-        if(resultatTrouve ==null)
+        if(resultatTrouve == null)
         {
             res.status(401).json({message:"email/mot de pass incorrecte"});
         }
         else{
+            // l'utilisateur est enrgistré dans la base de donnée 
             moduleBcrypt.compare(req.body.password,resultatTrouve.password)
             .then((valide)=>{
                 if(!valide)
                 {
+                    // mot de passe est incorrecte
                     res.status(401).json({Mesage:"email/mot de passe incorrecte"});
                 }
                 else{
+                      // le mot de passe est correcte 
                     res.status(200).json({
-                        // information necessaire à l'authentification
+                        // information necessaires à l'authentification de l'utilisateur
                         userID: resultatTrouve._id,
                         token : 'Token'
                     });
@@ -50,8 +54,15 @@ exports.login = async (req,res,next)=>{
             })
             .catch((Error)=> res.status(500).json({Error}));
         }
-
     })
     .catch((Error)=>res.status(500).json({Error}));
-
 };
+
+// suppression d'un utilisateur 
+// exportaton de la logique pour supprimer une donnée spécifique dans la bas de données 
+exports.deleteUser = async (req,res,next)=>{
+    await monShemaUtilisateurImporte.deleteOne({_id:req.params.id}) //findByIdAndDelete
+    .exec()
+    .then((resultat)=>res.status(200).json({resultat}))
+    .catch((Error)=>res.status(400).json({Error}));
+}
