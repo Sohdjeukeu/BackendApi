@@ -4,6 +4,10 @@ const monShemaUtilisateurImporte = require('../models/shemaModelUtilisateur');
 // il va falloir installer le package de cryptage  des mots de passe uilisateurs npm install --save bcrypt
 const moduleBcrypt = require('bcrypt');
 
+// ceci nous permet d'implementer le token d'authentification 
+const moduleJsonWeToken = require('jsonwebtoken'); // npm install --save jsonwebtoken permet de creer les token et de les vérifier
+
+
 
 
 
@@ -30,7 +34,7 @@ exports.signup = async (req,res,next)=>{
 exports.login = async (req,res,next)=>{
    await monShemaUtilisateurImporte.findOne({email:req.body.email})
     .then((resultatTrouve)=>{
-        if(resultatTrouve == null)
+        if(resultatTrouve == null /**ou !resultatTrouve */)
         {
             res.status(401).json({message:"email/mot de pass incorrecte"});
         }
@@ -44,13 +48,17 @@ exports.login = async (req,res,next)=>{
                     res.status(401).json({Mesage:"email/mot de passe incorrecte"});
                 }
                 else{
-                      // le mot de passe est correcte 
-                    res.status(200).json({
-                        // information necessaires à l'authentification de l'utilisateur
-                        userID: resultatTrouve._id,
-                        token : 'Token'
-                    });
-                }
+                        // le mot de passe est correcte 
+                        res.status(200).json({
+                            // information necessaires à l'authentification de l'utilisateur
+                            userID: resultatTrouve._id,
+                            // on va vérifier le token d'authentification.
+                            token : moduleJsonWeToken.sign(
+                                {userID:resultatTrouve._id},
+                                'RANDOM_TOKEN_SECRET',  //clé secrete pour encodage simple pour le developpement
+                                {expiresIn:'24h'})      // temps d'expiration pour le token              
+                        });
+                    }
             })
             .catch((Error)=> res.status(500).json({Error}));
         }
