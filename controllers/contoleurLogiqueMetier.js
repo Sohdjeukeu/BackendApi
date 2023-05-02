@@ -1,7 +1,7 @@
 /*Ce fichier contient la logique métier appliqueé à toutes les middlwares routes 
 cette logique doit être exportée)
 */
-// il fuat importer le shema de données 
+// il faut importer le shema de données 
 const shemaArticleImporte = require('../models/ShemaModelInscription');
 
 // On exporte la logique métier qui traitent les midlewares et qu étaien dans les routes 
@@ -12,15 +12,16 @@ const shemaArticleImporte = require('../models/ShemaModelInscription');
         const Inscription1 = new shemaArticleImporte({
         ...req.body // il copie les champs de la requete 
         });
-        console.log(req.body);
-        await Inscription1.save()  // la methode save() retourne une promise 
+        console.log(req.body); // affiche à la console du terminal la requete 
+        await Inscription1.save() //updateOne() // Model.findOneAndUpdate()la methode save() retourne une promise ou findOneAndUpdate()
+        
         .then((InscriptionASauvegarde)=>res.status(201).json({InscriptionASauvegarde}))
         .catch((Error)=>res.status(400).json({Error}));
     }; 
 
 // exportaton de la logique pour recuperer toutes les données dans la base de données.
     exports.getAllThing = async (req,res,next)=>{
-        await shemaArticleImporte.find()  // ou findById()
+        await shemaArticleImporte.find() // ou findById()
         // .then((resultat)=>res.status(200).json({resultat}))
         .then((resultat)=>res.status(200).json({resultat}))
         .catch((Error)=>res.status(400).json({Error}));

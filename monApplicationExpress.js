@@ -32,7 +32,7 @@ monAppExpress.use('/api/auth',gestonnaireRouteUtilisateur); // l'application exp
 const moduleMongoose = require('mongoose'); //  il va permettre l'interaction avec la base de données 
 //const monRouter = require('./routes/gestionnaireDeRoutes');
 
-moduleMongoose.connect('mongodb+srv://Merlin:Merlin@bdinsription.yskdsip.mongodb.net/?retryWrites=true&w=majority',
+moduleMongoose.connect('mongodb+srv://Merlin:onP7AxtQXcsCpMri@bdinsription.yskdsip.mongodb.net/?retryWrites=true&w=majority',
 {useNewUrlParser:true,
 useUnifiedTopology:true})
 .then(()=>console.log('Connexion à MongoDB réussie!'))
